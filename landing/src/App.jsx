@@ -1,5 +1,6 @@
 /**
  * Shorthorn Cargo — landing page.
+ * Live production build.
  *
  * The hero is a scroll-scrubbed 3D film: the page owns a tall runway, the frame
  * is pinned, and scroll position drives video.currentTime. The clip is re-encoded
@@ -1059,7 +1060,9 @@ function Header({ settled }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
       className={`fixed inset-x-0 top-0 z-30 transition-colors duration-500 ${
-        settled || mobileMenuOpen ? "bg-ink/80 backdrop-blur-xl backdrop-saturate-150" : "bg-transparent"
+        settled || mobileMenuOpen
+          ? "bg-ink/80 backdrop-blur-xl backdrop-saturate-150"
+          : "bg-transparent"
       }`}
     >
       {/* DESKTOP NAV (md screens and up) */}
@@ -1081,7 +1084,7 @@ function Header({ settled }) {
           aria-label={`${COMPANY.name} — back to top`}
           className="block justify-self-center px-4 text-bone transition-colors hover:text-jade sm:px-6"
         >
-          <Monogram className="h-9 w-9 sm:h-11 sm:w-11 text-bone" title={COMPANY.name} />
+          <Monogram className="h-10 w-10 sm:h-12 sm:w-12 rounded-md" title={COMPANY.name} />
         </a>
 
         <ul className="flex items-center justify-evenly gap-x-3 sm:gap-x-4">
@@ -1098,7 +1101,7 @@ function Header({ settled }) {
         {/* Left balance spacer */}
         <div className="w-9" />
 
-        {/* Center Logo + Shorthorn LLC */}
+        {/* Center Logo + Shorthorn Cargo */}
         <a
           href="#top"
           onClick={(e) => {
@@ -1107,13 +1110,13 @@ function Header({ settled }) {
           }}
           className="flex items-center gap-2.5 group"
         >
-          <Monogram className="h-8 w-8 text-jade transition-transform group-hover:scale-105" title={COMPANY.name} />
+          <Monogram className="h-10 w-10 rounded-md transition-transform group-hover:scale-105" title={COMPANY.name} />
           <div className="flex flex-col leading-none">
             <span className="font-mono text-sm font-bold uppercase tracking-[0.14em] text-bone">
               Shorthorn
             </span>
             <span className="mt-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.24em] text-jade">
-              LLC
+              Cargo
             </span>
           </div>
         </a>
@@ -1137,46 +1140,64 @@ function Header({ settled }) {
         </button>
       </div>
 
-      {/* MOBILE MENU DRAWER OVERLAY */}
+      {/* MOBILE MENU DRAWER */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-white/10 bg-ink-2/95 px-6 py-5 backdrop-blur-2xl md:hidden"
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className="relative overflow-hidden bg-ink/95 px-6 py-2 backdrop-blur-2xl md:hidden"
           >
-            <div className="flex flex-col gap-y-3.5">
+            {/* top hairline — inset */}
+            <span className="absolute top-0 left-5 right-5 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+            <div className="flex flex-col">
               {[...NAV_LEFT, ...NAV_RIGHT].map((item, idx) => (
                 <motion.a
                   key={item.href}
                   href={item.href}
-                  initial={{ opacity: 0, x: -10 }}
+                  initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.03 }}
+                  transition={{ delay: idx * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                  whileHover={{ x: 6 }}
+                  whileTap={{ scale: 0.97, x: 4 }}
                   onClick={(e) => {
+                    e.preventDefault();
                     closeMenu();
-                    scrollToSection(e, item.href);
+                    const target = item.href;
+                    setTimeout(() => {
+                      if (target === "#top") {
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      } else {
+                        document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }, 50);
                   }}
-                  className="flex items-center justify-between border-b border-white/5 pb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-bone/85 transition-colors hover:text-jade"
+                  className="group relative flex items-center gap-3 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-bone/70 transition-colors duration-200 hover:text-jade active:text-jade"
                 >
-                  <span>{item.label}</span>
-                  <span className="font-mono text-[10px] text-jade/60">0{idx + 1}</span>
+                  {/* jade accent dot */}
+                  <motion.span
+                    className="h-1.5 w-1.5 shrink-0 rounded-full bg-jade"
+                    initial={{ scale: 0, opacity: 0 }}
+                    whileHover={{ scale: 1, opacity: 1 }}
+                    whileTap={{ scale: 1.4, opacity: 1 }}
+                    transition={{ duration: 0.18 }}
+                  />
+                  {item.label}
+                  {/* arrow that slides in on hover */}
+                  <motion.span
+                    className="ml-auto font-mono text-jade/70"
+                    initial={{ opacity: 0, x: -4 }}
+                    whileHover={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    →
+                  </motion.span>
+                  {/* divider hairline — inset */}
+                  <span className="absolute bottom-0 left-2 right-2 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
                 </motion.a>
               ))}
-
-              <div className="pt-2">
-                <a
-                  href={COMPANY.phoneHref}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-jade/40 bg-jade/10 py-3 font-mono text-xs font-bold uppercase tracking-[0.16em] text-jade transition-colors hover:bg-jade hover:text-ink"
-                >
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  {COMPANY.phone}
-                </a>
-              </div>
             </div>
           </motion.div>
         )}
