@@ -61,13 +61,19 @@ const COMPANY = {
   // are officially "Not Rated". Swap this the day a Satisfactory rating is issued.
   safetyRating: "Not Rated",
   states: 42,
+  founded: "First registered and active with the FMCSA in April 2022, receiving official interstate common carrier authority on December 9, 2022.",
+  tractors: "100 total",
+  trailers: "56 total",
+  email: "There is no public official corporate email address listed in federal registries or carrier directories.",
+  instagram: "@shorthorncargo",
+  instagramUrl: "https://www.instagram.com/shorthorncargo/",
 };
 
 const STATS = [
   { label: "On-Time Delivery Rate", value: 99.4, suffix: "%", decimals: 1 },
-  { label: "Electronic Tracking", value: 100, suffix: "%", decimals: 0 },
+  { label: "Number of Tractors", value: 100, suffix: "", decimals: 0 },
   { label: "States Served", value: COMPANY.states, suffix: "", decimals: 0 },
-  { label: "Live Dispatch Support", value: 24, suffix: "/7", decimals: 0 },
+  { label: "Year Founded", value: 2022, suffix: "", decimals: 0, noComma: true },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -91,7 +97,7 @@ function hasWebGL() {
   }
 }
 
-function useCountUp(to, start, { duration = 2, decimals = 0 } = {}) {
+function useCountUp(to, start, { duration = 2, decimals = 0, noComma = false } = {}) {
   const [value, setValue] = useState(0);
   useEffect(() => {
     if (!start) return undefined;
@@ -102,7 +108,9 @@ function useCountUp(to, start, { duration = 2, decimals = 0 } = {}) {
     });
     return () => controls.stop();
   }, [to, start, duration]);
-  return decimals ? value.toFixed(decimals) : Math.round(value).toLocaleString();
+  if (decimals) return value.toFixed(decimals);
+  if (noComma) return String(Math.round(value));
+  return Math.round(value).toLocaleString();
 }
 
 function useNearViewport(ref, margin = "300px") {
@@ -1280,7 +1288,7 @@ function StatStrip() {
 }
 
 function StatCell({ stat, active, delay }) {
-  const value = useCountUp(stat.value, active, { duration: 1.9, decimals: stat.decimals });
+  const value = useCountUp(stat.value, active, { duration: 1.9, decimals: stat.decimals, noComma: stat.noComma });
   return (
     <motion.div
       initial={{ opacity: 0, y: 18 }}
@@ -1574,18 +1582,103 @@ function Contact() {
 
 function Footer() {
   return (
-    <footer className="relative bg-ink px-5 py-10 sm:px-8">
+    <footer className="relative border-t border-white/10 bg-ink px-5 pt-16 pb-12 sm:px-8">
+      {/* Top subtle glow line */}
       <span
         aria-hidden
-        className="absolute top-0 left-5 right-5 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent sm:left-8 sm:right-8"
+        className="absolute top-0 left-5 right-5 h-px bg-gradient-to-r from-transparent via-jade/50 to-transparent sm:left-8 sm:right-8"
       />
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 text-xs text-bone/40 sm:flex-row sm:items-center sm:justify-between">
-        <span className="font-mono uppercase tracking-[0.18em]">
-          © {new Date().getFullYear()} {COMPANY.legal} · dba {COMPANY.name}
-        </span>
-        <span className="font-mono tracking-[0.12em]">
-          USDOT {COMPANY.usdot} · MC {COMPANY.mc}
-        </span>
+
+      <div className="mx-auto max-w-7xl">
+        {/* Main Footer Grid */}
+        <div className="grid gap-10 pb-12 border-b border-white/10 lg:grid-cols-12">
+          
+          {/* Brand & History Column */}
+          <div className="lg:col-span-5 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-3">
+                <Monogram className="h-9 w-auto object-contain" title={COMPANY.name} />
+                <div>
+                  <h3 className="font-mono text-base font-bold uppercase tracking-[0.18em] text-bone">
+                    {COMPANY.name}
+                  </h3>
+                  <p className="text-[11px] font-mono text-bone/50 tracking-wider uppercase">
+                    {COMPANY.legal}
+                  </p>
+                </div>
+              </div>
+
+              <p className="mt-4 text-xs leading-relaxed text-bone/60 max-w-sm">
+                {COMPANY.tagline}. High-efficiency interstate freight operations connecting critical logistics lanes across the United States.
+              </p>
+            </div>
+          </div>
+
+          {/* Contact & Terminal */}
+          <div className="lg:col-span-4">
+            <h4 className="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-jade mb-4">
+              Contact & Terminal
+            </h4>
+            <div className="space-y-4 text-xs">
+              <div>
+                <span className="block font-mono text-[10px] uppercase text-bone/40 tracking-wider">24/7 Dispatch Phone</span>
+                <a
+                  href={COMPANY.phoneHref}
+                  className="font-mono text-base font-bold text-bone hover:text-jade transition-colors"
+                >
+                  {COMPANY.phone}
+                </a>
+              </div>
+
+              <div>
+                <span className="block font-mono text-[10px] uppercase text-bone/40 tracking-wider">Corporate Terminal</span>
+                <address className="not-italic text-bone/70 leading-relaxed">
+                  {COMPANY.address}<br />
+                  {COMPANY.city}
+                </address>
+              </div>
+            </div>
+          </div>
+
+          {/* Social & Connect */}
+          <div className="lg:col-span-3 flex flex-col justify-start">
+            <h4 className="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-jade mb-4">
+              Connect & Social
+            </h4>
+            
+            {/* Instagram Card */}
+            <a
+              href={COMPANY.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3 transition-all hover:border-jade/40 hover:bg-white/[0.08]"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white shadow-md shrink-0">
+                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </div>
+              <div className="min-w-0">
+                <span className="block font-mono text-[9px] uppercase tracking-wider text-bone/50">Instagram</span>
+                <span className="font-mono text-xs font-bold text-bone group-hover:text-jade transition-colors truncate block">{COMPANY.instagram}</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 text-xs font-mono text-bone/40">
+          <div>
+            © {new Date().getFullYear()} {COMPANY.legal}. All rights reserved.
+          </div>
+          <a
+            href="#top"
+            onClick={(e) => scrollToSection(e, "#top")}
+            className="flex items-center gap-2 hover:text-jade transition-colors uppercase tracking-wider text-[11px]"
+          >
+            Back to Top <span className="text-jade">↑</span>
+          </a>
+        </div>
       </div>
     </footer>
   );
