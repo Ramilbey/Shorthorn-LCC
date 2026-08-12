@@ -360,12 +360,11 @@ function ScrollHero({ reduced, onVideoReady }) {
     typeof window !== "undefined" &&
     window.matchMedia?.("(max-width: 768px)").matches;
 
-  const cueOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
+  const cueOpacity = useTransform(scrollYProgress, [0, 0.04], [1, 0]);
 
-  // Runway length sets the scrub speed: the 10 s clip is spread over this much
-  // scrolling, so a taller runway means slower playback per turn of the wheel.
+  // Runway length sets the scrub speed: 480vh provides a punchier, slightly faster scrub speed.
   return (
-    <section id="top" ref={runway} className="relative h-[620vh]">
+    <section id="top" ref={runway} className="relative h-[480vh]">
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden bg-ink">
         <video
           ref={videoRef}
@@ -410,12 +409,23 @@ function ScrollHero({ reduced, onVideoReady }) {
         />
         <HeroContact progress={smooth} />
 
+        {/* Centered Scroll Indicator Cue — disappears as soon as user starts scrolling */}
         <motion.div
           style={{ opacity: cueOpacity }}
-          className="pointer-events-none absolute right-8 top-24 hidden flex-col items-end gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-bone/45 md:flex"
+          className="pointer-events-none absolute bottom-7 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-2 text-center sm:bottom-8 md:bottom-7"
         >
-          Scroll
-          <span className="h-10 w-px bg-gradient-to-b from-jade to-transparent" />
+          <div className="flex items-center gap-2.5 rounded-full border border-white/20 bg-ink/70 px-4 py-1.5 backdrop-blur-xl shadow-lg ring-1 ring-white/10">
+            <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.26em] text-bone/80 sm:text-[10px]">
+              Scroll to Explore
+            </span>
+            <div className="relative flex h-4 w-2.5 items-start justify-center rounded-full border border-jade/70 p-0.5 sm:h-4.5 sm:w-3">
+              <motion.span
+                animate={{ y: [0, 5, 0] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                className="h-1 w-1 rounded-full bg-jade"
+              />
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
