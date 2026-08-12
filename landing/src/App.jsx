@@ -139,8 +139,74 @@ function useHoldThenRelease(progress) {
   return { opacity, y, visibility };
 }
 
-function HeroHeadline() {
-  return null;
+const DESKTOP_HERO_STAGES = [
+  {
+    range: [0.02, 0.08, 0.28, 0.34],
+    badge: null,
+    headline: null,
+    subheadline: "High-Efficiency Lanes. Dedicated Fleet.",
+    body: "Wisconsin-based contract transport serving critical logistics corridors across 42 states with 53-ft dry van capacity.",
+  },
+  {
+    range: [0.36, 0.42, 0.62, 0.68],
+    badge: null,
+    headline: null,
+    subheadline: "Connecting Terminals. Accelerating Delivery.",
+    body: "High-volume interstate transit engineered for maximum route optimization, reliability, and continuous uptime.",
+  },
+  {
+    range: [0.70, 0.76, 0.93, 0.98],
+    badge: null,
+    headline: null,
+    subheadline: "Driven by Efficiency. Powered by Trust.",
+    body: "Direct contract freight execution delivering zero delays, maximum cargo security, and total supply chain peace of mind.",
+  },
+];
+
+function HeroStageItem({ stage, progress }) {
+  const opacity = useTransform(progress, stage.range, [0, 1, 1, 0]);
+  const y = useTransform(progress, stage.range, [20, 0, 0, -16]);
+  const visibility = useTransform(opacity, (v) => (v < 0.02 ? "hidden" : "visible"));
+
+  return (
+    <motion.div
+      style={{ opacity, y, visibility }}
+      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-2xl text-center flex flex-col items-center justify-center"
+    >
+      <div className="flex flex-col items-center justify-center text-center bg-transparent border-0 p-0 shadow-none backdrop-blur-none drop-shadow-[0_4px_18px_rgba(0,0,0,0.9)]">
+        {stage.badge && (
+          <p className="inline-flex items-center gap-2 font-mono text-[10.5px] font-medium uppercase tracking-[0.28em] text-jade mb-2">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-jade" />
+            {stage.badge}
+          </p>
+        )}
+
+        {stage.headline && (
+          <h2 className="font-mono text-3xl font-black uppercase tracking-tight text-bone lg:text-4xl mb-1.5">
+            {stage.headline}
+          </h2>
+        )}
+
+        <h3 className="font-mono text-xl font-bold tracking-tight text-jade lg:text-2xl mb-2">
+          {stage.subheadline}
+        </h3>
+
+        <p className="max-w-xl text-sm leading-relaxed text-bone/90 lg:text-base font-normal">
+          {stage.body}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
+function HeroHeadline({ progress }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-20 hidden md:block">
+      {DESKTOP_HERO_STAGES.map((stage, idx) => (
+        <HeroStageItem key={idx} stage={stage} progress={progress} />
+      ))}
+    </div>
+  );
 }
 
 /**
