@@ -1,6 +1,6 @@
 [build]
   base = "landing"
-  publish = "landing/dist"
+  publish = "dist"
   command = "npm run build"
 
 [[redirects]]
