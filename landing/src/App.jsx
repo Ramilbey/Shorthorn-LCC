@@ -154,9 +154,9 @@ function GlassPanel({ progress, side, mobileRange, eyebrow, figure, unit, body }
   const mobileY = useTransform(progress, mobileRange, [24, 0, 0, -20]);
   const mobileVisibility = useTransform(mobileOpacity, (v) => (v < 0.03 ? "hidden" : "visible"));
 
-  // Desktop motion values: hold for the entire hero scroll animation
-  const desktopOpacity = useTransform(progress, [0, 0.05, 0.93, 1], [0, 1, 1, 0]);
-  const desktopY = useTransform(progress, [0, 0.05, 0.93, 1], [24, 0, 0, 24]);
+  // Desktop motion values: present immediately from start (opacity 1), only fading out when hero animation finishes
+  const desktopOpacity = useTransform(progress, [0, 0.93, 1], [1, 1, 0]);
+  const desktopY = useTransform(progress, [0, 0.93, 1], [0, 0, 24]);
   const desktopVisibility = useTransform(desktopOpacity, (v) => (v < 0.03 ? "hidden" : "visible"));
 
   const desktopPos =
