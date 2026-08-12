@@ -601,7 +601,7 @@ function RoutePulse({ progress }) {
     const head = progress.current;
     const t = state.clock.elapsedTime;
     for (let i = 0; i < COUNT; i++) {
-      const k = (i / COUNT + t * 0.1) % 1;
+      const k = (i / COUNT + t * 0.035) % 1;
       const at = ROUTE_PATH.at(k * head);
       dummy.position.copy(at.pos);
       dummy.position.y = 0.022;
@@ -636,12 +636,12 @@ function MapRig({ progress }) {
     const at = ROUTE_PATH.at(progress.current);
     if (group.current) {
       goal.set(at.pos.x, 0.02, at.pos.z);
-      group.current.position.lerp(goal, damp(d, 6));
+      group.current.position.lerp(goal, damp(d, 3.5));
       const yaw = Math.atan2(-at.dir.z, at.dir.x);
       let delta = yaw - group.current.rotation.y;
       while (delta > Math.PI) delta -= Math.PI * 2;
       while (delta < -Math.PI) delta += Math.PI * 2;
-      group.current.rotation.y += delta * damp(d, 4);
+      group.current.rotation.y += delta * damp(d, 2.8);
     }
     if (ring.current) {
       const k = (state.clock.elapsedTime % 1.5) / 1.5;
@@ -838,7 +838,7 @@ function useTelemetry(active) {
     const tick = (now) => {
       const dt = Math.min(now - last, 60) / 1000;
       last = now;
-      progress.current = (progress.current + dt / 110) % 1;
+      progress.current = (progress.current + dt / 360) % 1;
       accum += dt;
       if (accum > 0.25) {
         accum = 0;
@@ -848,7 +848,7 @@ function useTelemetry(active) {
         setReadout({
           pct: Math.round(p * 100),
           miles: Math.round(TOTAL_MILES * (1 - p)),
-          speed: Math.round(61 + Math.sin(now / 2200) * 3),
+          speed: Math.round(64 + Math.sin(now / 4500) * 2.5),
           lat: lerp(ROUTE[at.legIndex - 1].lat, leg.lat, 0.5),
           lon: lerp(ROUTE[at.legIndex - 1].lon, leg.lon, 0.5),
           next: leg.name,
