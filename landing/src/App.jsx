@@ -148,51 +148,53 @@ function HeroHeadline() {
  * the whole runway; on phones they shrink to corner chips rather than spanning
  * the width, so the two of them plus the CTA still fit above the fold.
  */
-function GlassPanel({ progress, side, delay, eyebrow, figure, unit, body }) {
-  const { opacity, y, visibility } = useHoldThenRelease(progress);
-  const edge =
-    side === "left" ? "left-4 md:left-8 items-start" : "right-4 md:right-8 items-end";
+function GlassPanel({ progress, side, range, eyebrow, figure, unit, body }) {
+  const opacity = useTransform(progress, range, [0, 1, 1, 0]);
+  const y = useTransform(progress, range, [24, 0, 0, -20]);
+  const visibility = useTransform(opacity, (v) => (v < 0.03 ? "hidden" : "visible"));
+
+  const desktopPos =
+    side === "left"
+      ? "md:left-8 md:right-auto md:translate-x-0 md:items-start md:text-left"
+      : "md:right-8 md:left-auto md:translate-x-0 md:items-end md:text-right";
 
   return (
     <motion.aside
       style={{ opacity, y, visibility }}
-      className={`pointer-events-none absolute bottom-24 z-10 flex w-[44%] flex-col md:bottom-10 md:w-[16rem] lg:w-[20rem] ${edge}`}
+      className={`pointer-events-none absolute bottom-44 sm:bottom-48 left-1/2 -translate-x-1/2 z-10 flex w-[90%] max-w-sm flex-col items-center text-center md:bottom-10 md:w-[16rem] lg:w-[20rem] ${desktopPos}`}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.9, delay, ease: [0.16, 1, 0.3, 1] }}
-        className="relative flex h-[160px] sm:h-[180px] md:h-[220px] w-full flex-col justify-between overflow-hidden rounded-2xl border border-white/15 bg-white/[0.07] p-3.5 shadow-2xl shadow-black/50 ring-1 ring-inset ring-white/10 backdrop-blur-2xl backdrop-saturate-150 md:rounded-3xl md:p-5"
+      <div
+        className="relative flex w-full flex-col justify-between overflow-hidden rounded-2xl bg-transparent border-0 p-0 shadow-none backdrop-blur-none md:rounded-3xl md:border md:border-white/15 md:bg-white/[0.07] md:p-5 md:shadow-2xl md:shadow-black/50 md:ring-1 md:ring-inset md:ring-white/10 md:backdrop-blur-2xl md:backdrop-saturate-150"
       >
-        {/* top edge catch-light */}
-        <span className="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/45 to-transparent" />
-        {/* slow specular sweep across the pane */}
-        <span className="pointer-events-none absolute -inset-y-8 -left-1/3 w-1/2 rotate-12 animate-[sheen_7s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-        {/* brand tint pooling in the lower corner */}
-        <span className="pointer-events-none absolute -bottom-14 -right-8 h-32 w-32 rounded-full bg-jade/20 blur-3xl" />
+        {/* top edge catch-light (desktop only) */}
+        <span className="pointer-events-none absolute inset-x-5 top-0 hidden h-px bg-gradient-to-r from-transparent via-white/45 to-transparent md:block" />
+        {/* slow specular sweep across the pane (desktop only) */}
+        <span className="pointer-events-none absolute -inset-y-8 -left-1/3 hidden w-1/2 rotate-12 animate-[sheen_7s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent md:block" />
+        {/* brand tint pooling in the lower corner (desktop only) */}
+        <span className="pointer-events-none absolute -bottom-14 -right-8 hidden h-32 w-32 rounded-full bg-jade/20 blur-3xl md:block" />
 
-        <div className="relative flex h-full flex-col justify-between">
+        <div className="relative flex flex-col justify-between items-center text-center md:items-stretch md:text-left">
           <div>
-            <p className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.24em] text-jade md:text-[10px] md:tracking-[0.28em]">
+            <p className="flex items-center justify-center gap-2 font-mono text-[9.5px] uppercase tracking-[0.24em] text-jade md:text-[10px] md:tracking-[0.28em] md:justify-start">
               <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-jade" />
               {eyebrow}
             </p>
 
-            <div className="mt-2 flex flex-wrap items-baseline gap-x-2 md:mt-2.5">
-              <span className="font-mono text-2xl font-black tracking-tight text-bone md:text-4xl">
+            <div className="mt-1.5 flex flex-wrap items-baseline justify-center gap-x-2 md:mt-2.5 md:justify-start">
+              <span className="font-mono text-3xl font-black tracking-tight text-bone sm:text-4xl md:text-4xl">
                 {figure}
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-bone/55 md:text-[11px]">
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-bone/60 md:text-[11px]">
                 {unit}
               </span>
             </div>
           </div>
 
-          <p className="mt-2 text-xs leading-relaxed text-bone/70 md:text-sm">
+          <p className="mt-2 text-xs leading-relaxed text-bone/85 max-w-xs mx-auto sm:text-sm md:text-bone/70 md:max-w-none md:mx-0">
             {body}
           </p>
         </div>
-      </motion.div>
+      </div>
     </motion.aside>
   );
 }
@@ -225,7 +227,7 @@ function HeroContact({ progress }) {
   return (
     <motion.div
       style={{ opacity, y, visibility }}
-      className="absolute bottom-14 left-1/2 z-10 -translate-x-1/2 md:bottom-24"
+      className="absolute bottom-24 left-1/2 z-20 -translate-x-1/2 sm:bottom-28 md:bottom-24"
     >
       <motion.a
         href="#contact"
@@ -356,7 +358,7 @@ function ScrollHero({ reduced, onVideoReady }) {
         <GlassPanel
           progress={smooth}
           side="left"
-          delay={0.55}
+          range={[0.02, 0.10, 0.42, 0.48]}
           eyebrow="The fleet"
           figure="100"
           unit="power units"
@@ -365,7 +367,7 @@ function ScrollHero({ reduced, onVideoReady }) {
         <GlassPanel
           progress={smooth}
           side="right"
-          delay={0.65}
+          range={[0.50, 0.58, 0.88, 0.94]}
           eyebrow="The network"
           figure="10.3M+"
           unit="miles / yr"
