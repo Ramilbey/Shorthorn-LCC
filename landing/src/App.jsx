@@ -826,7 +826,7 @@ function NightExpressScene({ progress, tilt }) {
       <ambientLight intensity={1.1} />
       <directionalLight position={[8, 14, 10]} intensity={1.8} color="#dff5ea" />
       <Suspense fallback={null}>
-        <Environment resolution={128} frames={1}>
+        <Environment resolution={64} frames={1}>
           <Lightformer form="rect" intensity={4.5} position={[0, 8, -6]} scale={[24, 6, 1]} color="#bff0d8" />
           <Lightformer form="rect" intensity={3} position={[8, 5, 8]} scale={[12, 6, 1]} color="#16c07d" />
         </Environment>
@@ -959,10 +959,10 @@ function NightExpress({ webgl }) {
           <div className="relative aspect-[16/11] bg-ink-2 lg:aspect-auto lg:min-h-[480px]">
             {webgl ? (
               <Canvas
-                dpr={[1, 1.6]}
+                dpr={[1, 1.5]}
                 frameloop={near ? "always" : "never"}
                 camera={{ position: [0, 16, 14], fov: 40, near: 0.1, far: 140 }}
-                gl={{ antialias: true }}
+                gl={{ antialias: true, powerPreference: "high-performance", alpha: false, stencil: false }}
               >
                 <Suspense fallback={null}>
                   <NightExpressScene progress={progress} tilt={tilt} />
