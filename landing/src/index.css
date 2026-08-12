@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+/* Brand palette, sampled from the Shorthorn logo tile (#003926). */
+@theme {
+  --color-ink: #05080a;
+  --color-ink-2: #0a100d;
+  --color-ink-3: #111a16;
+  --color-forest: #003926;
+  --color-forest-2: #00543a;
+  --color-jade: #16c07d;
+  --color-jade-2: #4fe3a8;
+  --color-bone: #f4f7f4;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: #05080a;
+  color: #f4f7f4;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Locked while the loading terminal is up. */
+body[data-locked="true"] {
+  overflow: hidden;
+}
+
+::selection {
+  background: rgba(22, 192, 125, 0.3);
+}
+
+/* Specular sweep across the frosted hero panel. */
+@keyframes sheen {
+  0%,
+  100% {
+    transform: translateX(-60%) rotate(12deg);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  70%,
+  100% {
+    transform: translateX(320%) rotate(12deg);
+    opacity: 0;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
