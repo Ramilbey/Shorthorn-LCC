@@ -39,7 +39,7 @@ import Monogram from "./Monogram.jsx";
 
 const HERO_VIDEO = {
   large: "/media/hero-1280.mp4",
-  small: "/media/hero-854.mp4",
+  small: "/media/mobile-version.mp4",
   poster: "/media/hero-poster.jpg",
 };
 
