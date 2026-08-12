@@ -166,10 +166,10 @@ function GlassPanel({ progress, side, mobileRange, eyebrow, figure, unit, body }
 
   return (
     <>
-      {/* MOBILE VERSION: Frameless, centered above contact button, appears one-by-one on scroll */}
+      {/* MOBILE VERSION: Frameless, centered in middle of screen, appears one-by-one on scroll */}
       <motion.aside
         style={{ opacity: mobileOpacity, y: mobileY, visibility: mobileVisibility }}
-        className="pointer-events-none absolute bottom-44 sm:bottom-48 left-1/2 -translate-x-1/2 z-10 flex w-[90%] max-w-sm flex-col items-center text-center md:hidden"
+        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex w-[88%] max-w-sm flex-col items-center text-center md:hidden"
       >
         <div className="relative flex w-full flex-col justify-between items-center text-center bg-transparent border-0 p-0 shadow-none backdrop-blur-none">
           <div>
@@ -262,7 +262,7 @@ function HeroContact({ progress }) {
   return (
     <motion.div
       style={{ opacity, y, visibility }}
-      className="absolute bottom-24 left-1/2 z-20 -translate-x-1/2 sm:bottom-28 md:bottom-24"
+      className="absolute bottom-32 left-1/2 z-20 -translate-x-1/2 sm:bottom-36 md:bottom-24"
     >
       <motion.a
         href="#contact"
@@ -412,7 +412,7 @@ function ScrollHero({ reduced, onVideoReady }) {
         {/* Centered Scroll Indicator Cue — disappears as soon as user starts scrolling */}
         <motion.div
           style={{ opacity: cueOpacity }}
-          className="pointer-events-none absolute bottom-7 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-2 text-center sm:bottom-8 md:bottom-7"
+          className="pointer-events-none absolute bottom-14 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-2 text-center sm:bottom-16 md:bottom-7"
         >
           <div className="flex items-center gap-2.5 rounded-full border border-white/20 bg-ink/70 px-4 py-1.5 backdrop-blur-xl shadow-lg ring-1 ring-white/10">
             <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.26em] text-bone/80 sm:text-[10px]">
